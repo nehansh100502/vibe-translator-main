@@ -1,122 +1,43 @@
-# Vibe Translator
+# Svelte + Vite
 
-One prompt. Five stacks. Powered by [Oz Cloud Agents](https://www.warp.dev/oz).
+This template should help get you started developing with Svelte in Vite.
 
-Describe an app in plain English. Oz spawns 5 parallel agents that each build it in a different framework, then a judge agent compares all results.
+## Recommended IDE Setup
 
-## Quick Start
+[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
 
-### 1. Create the Oz Environment
+## Need an official Svelte framework?
 
-Go to the [Warp Oz platform](https://www.warp.dev/oz) and create a new environment with these details:
+Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
 
-| Field | Value |
-|-------|-------|
-| **Name** | `vibe-translator` |
-| **Description** | `Environment for Vibe Translator — multi-stack app generator powered by Oz` |
-| **Repositories** | `hiteshchoudhary/vibe-translator` |
-| **Docker Image** | `node:20-bookworm` |
-| **Setup commands** | `npm install -g create-vite degit serve` |
-| | `apt-get update && apt-get install -y jq curl` |
+## Technical considerations
 
-> **Note:** The environment name must be exactly `vibe-translator` — the script references it by this name.
+**Why use this over SvelteKit?**
 
-### 2. Run it
+- It brings its own routing solution which might not be preferable for some users.
+- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
 
-**Option A: TypeScript (recommended)** — uses the official [Oz SDK](https://github.com/warpdotdev/oz-sdk-typescript)
+This template contains as little as possible to get started with Vite + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
 
-```bash
-npm install
-export WARP_API_KEY="your-api-key"
-npx tsx vibe-translate.ts "Build me a pomodoro timer with dark mode"
+Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
+
+**Why include `.vscode/extensions.json`?**
+
+Other templates indirectly recommend extensions via the README, but this file allows VS Code to prompt the user to install the recommended extension upon opening the project.
+
+**Why enable `checkJs` in the JS template?**
+
+It is likely that most cases of changing variable types in runtime are likely to be accidental, rather than deliberate. This provides advanced typechecking out of the box. Should you like to take advantage of the dynamically-typed nature of JavaScript, it is trivial to change the configuration.
+
+**Why is HMR not preserving my local component state?**
+
+HMR state preservation comes with a number of gotchas! It has been disabled by default in both `svelte-hmr` and `@sveltejs/vite-plugin-svelte` due to its often surprising behavior. You can read the details [here](https://github.com/sveltejs/svelte-hmr/tree/master/packages/svelte-hmr#preservation-of-local-state).
+
+If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
+
+```js
+// store.js
+// An extremely simple external store
+import { writable } from 'svelte/store'
+export default writable(0)
 ```
-
-**Option B: Bash** — uses the Oz CLI directly
-
-```bash
-warp login
-./vibe-translate.sh "Build me a pomodoro timer with dark mode"
-```
-
-**After it finishes:**
-
-```bash
-# Monitor agents
-oz run list
-
-# Open PRs when done
-./open-prs.sh
-```
-
-## How It Works
-
-```
- Your Prompt
-      |
-      v
- vibe-translate.sh
-      |
-      +---> [Agent 1] React + Tailwind       ---> vibe/react-tailwind
-      +---> [Agent 2] Svelte + CSS            ---> vibe/svelte-css
-      +---> [Agent 3] Vue + Tailwind          ---> vibe/vue-tailwind
-      +---> [Agent 4] Vanilla HTML/CSS/JS     ---> vibe/vanilla-html-css-js
-      |
-      v  (waits for all 4)
-      |
-      +---> [Agent 5] Comparison Judge        ---> vibe/comparison-report
-```
-
-## Agents
-
-| Agent | Stack | Directory | Branch |
-|-------|-------|-----------|--------|
-| 1 | React + Tailwind CSS | `/react` | `vibe/react-tailwind` |
-| 2 | Svelte + Vanilla CSS | `/svelte` | `vibe/svelte-css` |
-| 3 | Vue 3 + Tailwind CSS | `/vue` | `vibe/vue-tailwind` |
-| 4 | Vanilla HTML/CSS/JS | `/vanilla` | `vibe/vanilla-html-css-js` |
-| 5 | Comparison Judge | `/comparison` | `vibe/comparison-report` |
-
-## Output
-
-After all agents finish you get:
-
-- **4 branches** each with a fully built app in a different stack
-- **`comparison/report.md`** — detailed side-by-side analysis with scores
-- **`comparison/scores.json`** — machine-readable structured scores
-- **`comparison/index.html`** — visual comparison dashboard (open in browser)
-
-### Viewing Results
-
-```bash
-# Check agent status
-oz run list
-
-# View the comparison report
-git fetch --all
-git checkout vibe/comparison-report
-open comparison/index.html      # Visual dashboard in browser
-cat comparison/report.md         # Detailed markdown report
-cat comparison/scores.json       # Machine-readable scores
-```
-
-You can also view results directly on GitHub via the PRs created by each agent.
-
-## Example Prompts
-
-```bash
-./vibe-translate.sh "Build a calculator with a clean modern design"
-./vibe-translate.sh "Build a markdown note-taking app with live preview and local storage"
-./vibe-translate.sh "Build a kanban board with drag-and-drop and dark/light theme toggle"
-./vibe-translate.sh "Build a weather dashboard with 5-day forecast and city search"
-```
-
-## Requirements
-
-- [Warp](https://www.warp.dev/) with Oz CLI
-- Warp account with 20+ credits
-- [GitHub CLI](https://cli.github.com/) (`gh`)
-- Git with push access
-
-## Full Guide
-
-See [vibe-translator-guide.md](../vibe-translator-guide.md) for the complete walkthrough.
